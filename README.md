@@ -11,3 +11,6 @@
 4. Your project must be powered by a data set with at least 100 records.
 5. Your project must include some level of user-driven interaction (e.g., menus, dropdowns, textboxes).
 6. Your final visualization should ideally include at least three views.
+
+## Our project:
+Overview
