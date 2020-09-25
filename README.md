@@ -1,5 +1,19 @@
 # project_2
 
+
+## Our project:
+### Overview:
+
+
+### Data sources:
+* NYTimes COVID data: https://github.com/nytimes/covid-19-data
+* CDC: Excess Deaths Associated with COVID-19: https://www.cdc.gov/nchs/nvss/vsrr/covid19/excess_deaths.htm
+
+
+### Visual inspiration:
+
+
+
 ## Project requirements:
 1. Your visualization must include a Python Flask–powered RESTful API, HTML/CSS, JavaScript, and at least one database (SQL, MongoDB, SQLite, etc.).
 2. Your project should fall into one of the below four tracks:
@@ -11,14 +25,3 @@
 4. Your project must be powered by a data set with at least 100 records.
 5. Your project must include some level of user-driven interaction (e.g., menus, dropdowns, textboxes).
 6. Your final visualization should ideally include at least three views.
-
-## Our project:
-### Overview:
-
-
-### Data sources:
-* NYTimes COVID data: https://github.com/nytimes/covid-19-data
-
-
-### Visual inspiration:
-
