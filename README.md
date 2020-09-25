@@ -1,13 +1,19 @@
 # project_2
 
 
-## Our project:
+## Our project proposal:
 ### Overview:
+We're going to revisit some of the COVID data that had been used previously in the class, specifically the New York Times daily data.
+We plan to map all of this data out using Leaflet / Mapbox.
+We're also going to combine this data with CDC data that documents excess deaths in the US to build a visual representation of what these cases and deaths look like over time and how that compares to expected deaths.
+
 
 
 ### Data sources:
 * NYTimes COVID data: https://github.com/nytimes/covid-19-data
 * CDC: Excess Deaths Associated with COVID-19: https://www.cdc.gov/nchs/nvss/vsrr/covid19/excess_deaths.htm
+
+
 
 
 ### Visual inspiration:
@@ -25,3 +31,6 @@
 4. Your project must be powered by a data set with at least 100 records.
 5. Your project must include some level of user-driven interaction (e.g., menus, dropdowns, textboxes).
 6. Your final visualization should ideally include at least three views.
+
+
+
