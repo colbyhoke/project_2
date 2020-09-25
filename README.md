@@ -18,6 +18,7 @@
 
 ### Data sources:
 * NYTimes COVID data: https://github.com/nytimes/covid-19-data
+* CDC: Excess Deaths Associated with COVID-19: https://www.cdc.gov/nchs/nvss/vsrr/covid19/excess_deaths.htm
 
 
 ### Visual inspiration:
