@@ -13,4 +13,12 @@
 6. Your final visualization should ideally include at least three views.
 
 ## Our project:
-Overview
+### Overview:
+
+
+### Data sources:
+* NYTimes COVID data: https://github.com/nytimes/covid-19-data
+
+
+### Visual inspiration:
+
