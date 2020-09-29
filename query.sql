@@ -140,3 +140,12 @@ CREATE TABLE covidtracking_all (
     totalTestResultsIncrease INT,
     hash VARCHAR
 );
+
+CREATE TABLE county (
+    state TEXT,
+    fips INT,
+    county TEXT,
+    county_seat TEXT,
+    lat FLOAT,
+    lon FLOAT
+);
