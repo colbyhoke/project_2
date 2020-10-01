@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS covid, masks, cdc, covidtracking_current, covidtracking_all;
+DROP TABLE IF EXISTS covid, masks, cdc, covidtracking_current, covidtracking_all, county;
 
 -- Create Tables
 CREATE TABLE covid (
@@ -7,11 +7,12 @@ CREATE TABLE covid (
     state TEXT,
     fips INT,
     cases INT,
-    deaths INT
+    deaths INT,
+    PRIMARY KEY (date, fips)
 );
 
 CREATE TABLE masks (
-    fips INT,
+    fips INT PRIMARY KEY,
     never FLOAT,
     rarely FLOAT,
     sometimes FLOAT,
@@ -53,7 +54,8 @@ CREATE TABLE cdc (
     flag_hd VARCHAR,
     flag_neopl VARCHAR,
     flag_allcause VARCHAR,
-    flag_natcause VARCHAR
+    flag_natcause VARCHAR,
+    PRIMARY KEY (state, week, year)
 );
 
 CREATE TABLE covidtracking_current (
@@ -110,11 +112,12 @@ CREATE TABLE covidtracking_current (
     negativeScore INT,
     positiveScore INT,
     score INT,
-    grade VARCHAR
+    grade VARCHAR,
+    PRIMARY KEY (state, date)
 );
 
 CREATE TABLE covidtracking_all (
-    date INT,
+    date INT PRIMARY KEY,
     states INT,
     positive INT,
     negative INT,
@@ -143,7 +146,7 @@ CREATE TABLE covidtracking_all (
 
 CREATE TABLE county (
     state TEXT,
-    fips INT,
+    fips INT PRIMARY KEY,
     county TEXT,
     county_seat TEXT,
     lat FLOAT,
