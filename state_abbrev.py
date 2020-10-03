@@ -1,4 +1,4 @@
-# The below is adapted from GitHub user rogerallen
+# The below is adapted from GitHub user: rogerallen
 # From:
 # https://gist.github.com/rogerallen/1583593
 

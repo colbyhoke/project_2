@@ -4,10 +4,9 @@ from sqlalchemy import create_engine, func
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from state_abbrev import abbrev_us_state
+from flask import render_template
 
 engine = create_engine('postgresql://covid_db_admin:pass123@localhost:5432/covid_db')
-#conn = engine.connect()
-#Base.metadata.create_all(conn)
 Base = automap_base()
 Base.prepare(engine, reflect=True)
 
@@ -16,6 +15,7 @@ Covid = Base.classes.covid
 Masks = Base.classes.masks
 Cdc = Base.classes.cdc
 County = Base.classes.county
+Combined = Base.classes.combined
 
 # Flask setup
 app = Flask(__name__)
@@ -28,7 +28,7 @@ app = Flask(__name__)
 #########
 @app.route('/')
 def index():
-    return "Hello, World! <br><br> <a href='./api/v1.0/covid-all'>Link to covid API</a> <br><br> <a href='./api/v1.0/cdc'>Link to cdc API</a> <br><br> <a href='./api/v1.0/masks'>Link to masks API</a> <br><br> <a href='./api/v1.0/counties'>Link to counties API</a>"
+    return render_template("index.html")
 
 #########
 # 
@@ -37,7 +37,7 @@ def index():
 #########
 @app.route('/api/v1.0/')
 def api():
-    return "Coming soon!"
+    return render_template("api_routes.html")
 
 #########
 # 
@@ -69,36 +69,45 @@ def covid():
 
     return jsonify(all_covid)
 
+#########
+# 
+# Create route to all of the covid data, but filtered by state input by the user
+#
+#########
+
 @app.route("/api/v1.0/covid-all/<state_input>")
-def covid_nc(state_input):
-    
-    # Coming soon - handle different inputs and capitalizations
-    
-    state_input = state_input.upper()
-    state_search = abbrev_us_state[state_input]
-    
-    # Create the session (link) from Python to the DB
-    session = Session(engine)
-
-    # Return all covid stuff
-
-    results = session.query(Covid.date, Covid.county, Covid.state, Covid.fips, Covid.cases, Covid.deaths).filter_by(state=state_search).all()
-    session.close()
-
-    all_covid = []
-    for date, county, state, fips, cases, deaths in results:
-        covid_dict = {}
-        covid_dict["date"] = date
-        covid_dict["county"] = county
-        covid_dict["state"] = state
-        covid_dict["fips"] = fips
-        covid_dict["cases"] = cases
-        covid_dict["deaths"] = deaths
+def covid_state(state_input):
+    try:
+        # Handle different inputs and capitalizations  
+        state_input = state_input.upper()
+        state_search = abbrev_us_state[state_input]
         
-        all_covid.append(covid_dict)
+        # Create the session (link) from Python to the DB
+        session = Session(engine)
 
-    return jsonify(all_covid)
+        # Return all covid stuff
 
+        results = session.query(Covid.date, Covid.county, Covid.state, Covid.fips, Covid.cases, Covid.deaths).filter_by(state=state_search).all()
+        
+        
+        session.close()
+
+        all_covid = []
+        for date, county, state, fips, cases, deaths in results:
+            covid_dict = {}
+            covid_dict["date"] = date
+            covid_dict["county"] = county
+            covid_dict["state"] = state
+            covid_dict["fips"] = fips
+            covid_dict["cases"] = cases
+            covid_dict["deaths"] = deaths
+            
+            all_covid.append(covid_dict)
+
+        return jsonify(all_covid)
+    
+    except:
+        return bad_request("State not found. Please format the state its two-letter abbreviation.")
 
 #########
 # 
@@ -209,7 +218,7 @@ def counties():
 
     # Return all county stuff
     results = session.query(County.state, County.fips, County.county, County.county_seat, County.lat, County.lon).all()
-    
+    print(results)
     session.close()
 
     all_counties = []
@@ -228,8 +237,96 @@ def counties():
 
     return jsonify(all_counties)
 
+#########
+# 
+# Create route to all of the county data, but filtered by state input by the user
+#
+#########
 
-# Comments
+@app.route("/api/v1.0/counties/<state_input>")
+def counties_state(state_input):
+    
+    try:
+        # Handle different inputs and capitalizations
+        state_search = state_input.upper()
+        
+        # Create the session (link) from Python to the DB
+        session = Session(engine)
+
+        # Return all county stuff
+        results = session.query(County.state, County.fips, County.county, County.county_seat, County.lat, 
+        County.lon).filter_by(state=state_search).all()
+        
+        session.close()
+
+        all_counties = []
+
+        for state, fips, county, county_seat, lat, lon in results:
+            county_dict = {}
+
+            county_dict["state"] = state
+            county_dict["fips"] = fips
+            county_dict["county"] = county 
+            county_dict["county_seat"] = county_seat
+            county_dict["lat"] = lat
+            county_dict["lon"] = lon
+
+            all_counties.append(county_dict)
+
+        return jsonify(all_counties)    
+
+    except:
+        return bad_request("State not found. Please format the state its two-letter abbreviation.")
+
+#########
+# 
+# Create route to the combined data table
+#
+#########
+
+@app.route("/api/v1.0/combined-data")
+def combined():
+    # Create the session (link) from Python to the DB
+    session = Session(engine)
+
+    # Return all county stuff
+    results = session.query(Combined.date, Combined.county, Combined.state, Combined.cases, Combined.deaths, 
+    Combined.fips, Combined.never, Combined.rarely, Combined.sometimes, Combined.frequently, Combined.always, 
+    Combined.county_seat, Combined.lat, Combined.lon).all()
+
+    session.close()
+
+    all_data = []
+
+    for date, county, state, cases, deaths, fips, never, rarely, sometimes, frequently, always, county_seat, lat, lon in results:
+        combined_dict = {}
+
+        combined_dict["date"] = date
+        combined_dict["county"] = county 
+        combined_dict["state"] = state
+        combined_dict["cases"] = cases
+        combined_dict["deaths"] = deaths
+        combined_dict["fips"] = fips
+        combined_dict["never"] = never
+        combined_dict["rarely"] = rarely
+        combined_dict["sometimes"] = sometimes
+        combined_dict["frequently"] = frequently
+        combined_dict["always"] = always
+        combined_dict["county_seat"] = county_seat
+        combined_dict["lat"] = lat
+        combined_dict["lon"] = lon
+
+        all_data.append(combined_dict)
+
+    return jsonify(all_data)
+
+# Error messages
+def bad_request(message):
+    response = jsonify({'Error': message})
+    response.status_code = 400
+    return response
+
+# Comment
 if __name__ == '__main__':
     app.run(debug=True)
 
