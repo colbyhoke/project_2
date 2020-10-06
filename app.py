@@ -6,7 +6,10 @@ from sqlalchemy.orm import Session
 from state_abbrev import abbrev_us_state
 from flask import render_template
 
-engine = create_engine('postgresql://covid_db_admin:pass123@localhost:5432/covid_db')
+rds_connection_string = 'covid_db_admin:pass123@localhost:5432/covid_db'
+#rds_connection_string = 'wewgmdkmixbost:2867215a1a0078b7b97755002ee58726a435d9667c75357935b55e35d15779b9@ec2-52-21-247-176.compute-1.amazonaws.com:5432/davqjt1jvosgp8'
+engine = create_engine(f'postgresql://{rds_connection_string}')
+
 Base = automap_base()
 Base.prepare(engine, reflect=True)
 
@@ -128,11 +131,11 @@ def masks():
     for fips, never, rarely, sometimes, frequently, always in results:
         masks_dict = {}
         masks_dict["fips"] = fips
-        masks_dict["never"] = never
-        masks_dict["rarely"] = rarely
-        masks_dict["sometimes"] = sometimes
-        masks_dict["frequently"] = frequently
-        masks_dict["always"] = always
+        masks_dict["mask_never"] = never
+        masks_dict["mask_rarely"] = rarely
+        masks_dict["mask_sometimes"] = sometimes
+        masks_dict["mask_frequently"] = frequently
+        masks_dict["mask_always"] = always
 
         all_masks.append(masks_dict)
     
@@ -163,7 +166,7 @@ def cdc():
 
     all_cdc = []
 
-    for state, year, week, week_ending_date, all_causes, natural_causes, septicemia, malignant_neoplasms, diabetes, alzheimers, influenza_and_pneumonia, chronic_lower_respiratory, other_diseases_of_respiratory, nephritis_nephrotic_syndrome, symptoms_signs_and_abnormal, diseases_of_heart, cerebrovascular_diseases, covid_19_multiple_causes, covid_19_underlying_cause, flag_otherresp, flag_otherunk, flag_nephr, flag_inflpn, flag_cov19mcod, flag_cov19ucod, flag_sept, flag_diab, flag_alz, flag_clrd, flag_stroke, flag_hd, flag_neopl, flag_allcause, flag_natcause in results:
+    for state, year, week, week_ending_date, all_causes, natural_causes, septicemia, malignant_neoplasms, diabetes, alzheimers, influenza_and_pneumonia, chronic_lower_respiratory, other_diseases_of_respiratory, nephritis_nephrotic_syndrome, symptoms_signs_and_abnormal, diseases_of_heart, cerebrovascular_diseases, covid_19_multiple_causes, covid_19_underlying_cause in results:
 
         cdc_dict = {}
         cdc_dict["state"] = state
@@ -185,21 +188,6 @@ def cdc():
         cdc_dict["cerebrovascular_diseases"] = cerebrovascular_diseases
         cdc_dict["covid_19_multiple_causes"] = covid_19_multiple_causes
         cdc_dict["covid_19_underlying_cause"] = covid_19_underlying_cause
-        cdc_dict["flag_otherresp"] = flag_otherresp
-        cdc_dict["flag_otherunk"] = flag_otherunk
-        cdc_dict["flag_nephr"] = flag_nephr
-        cdc_dict["flag_inflpn"] = flag_inflpn
-        cdc_dict["flag_cov19mcod"] = flag_cov19mcod
-        cdc_dict["flag_cov19ucod"] = flag_cov19ucod
-        cdc_dict["flag_sept"] = flag_sept
-        cdc_dict["flag_diab"] = flag_diab
-        cdc_dict["flag_alz"] = flag_alz
-        cdc_dict["flag_clrd"] = flag_clrd
-        cdc_dict["flag_stroke"] = flag_stroke
-        cdc_dict["flag_hd"] = flag_hd
-        cdc_dict["flag_neopl"] = flag_neopl
-        cdc_dict["flag_allcause"] = flag_allcause
-        cdc_dict["flag_natcause"] = flag_natcause
 
         all_cdc.append(cdc_dict)
 
@@ -307,11 +295,11 @@ def combined():
         combined_dict["cases"] = cases
         combined_dict["deaths"] = deaths
         combined_dict["fips"] = fips
-        combined_dict["never"] = never
-        combined_dict["rarely"] = rarely
-        combined_dict["sometimes"] = sometimes
-        combined_dict["frequently"] = frequently
-        combined_dict["always"] = always
+        combined_dict["mask_never"] = never
+        combined_dict["mask_rarely"] = rarely
+        combined_dict["mask_sometimes"] = sometimes
+        combined_dict["mask_frequently"] = frequently
+        combined_dict["mask_always"] = always
         combined_dict["county_seat"] = county_seat
         combined_dict["lat"] = lat
         combined_dict["lon"] = lon
@@ -319,6 +307,57 @@ def combined():
         all_data.append(combined_dict)
 
     return jsonify(all_data)
+
+#########
+# 
+# Create route to the combined data table, but filtered by state input by the user
+#
+#########
+
+@app.route("/api/v1.0/combined-data/<state_input>")
+def combined_state(state_input):
+    try:
+        # Handle different inputs and capitalizations  
+        state_input = state_input.upper()
+        state_search = abbrev_us_state[state_input]
+        
+        # Create the session (link) from Python to the DB
+        session = Session(engine)
+
+        # Return all county stuff
+        results = session.query(Combined.date, Combined.county, Combined.state, Combined.cases, Combined.deaths, 
+        Combined.fips, Combined.never, Combined.rarely, Combined.sometimes, Combined.frequently, Combined.always, 
+        Combined.county_seat, Combined.lat, Combined.lon).filter_by(state=state_search).all()
+
+        session.close()
+
+        all_data = []
+
+        for date, county, state, cases, deaths, fips, never, rarely, sometimes, frequently, always, county_seat, lat, lon in results:
+            combined_dict = {}
+
+            combined_dict["date"] = date
+            combined_dict["county"] = county 
+            combined_dict["state"] = state
+            combined_dict["cases"] = cases
+            combined_dict["deaths"] = deaths
+            combined_dict["fips"] = fips
+            combined_dict["mask_never"] = never
+            combined_dict["mask_rarely"] = rarely
+            combined_dict["mask_sometimes"] = sometimes
+            combined_dict["mask_frequently"] = frequently
+            combined_dict["mask_always"] = always
+            combined_dict["county_seat"] = county_seat
+            combined_dict["lat"] = lat
+            combined_dict["lon"] = lon
+
+            all_data.append(combined_dict)
+
+        return jsonify(all_data)
+    
+    except:
+        return bad_request("State not found. Please format the state its two-letter abbreviation.")
+
 
 # Error messages
 def bad_request(message):
