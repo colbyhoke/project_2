@@ -1,13 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" 
-    type="image/png" 
-    href="/static/favicon.ico">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="icon" 
+      type="image/png" 
+      href="/static/favicon.ico">
 </head>
 <body>
-  Hello world<br><br>
-  <a href="/api/v1.0/">Check out the API to access the data used in this page.</a>
+  <ul class="nav justify-content-center">
+    <li class="nav-item">
+      <a class="nav-link active" href="#">Visualizations</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/api/v1.0/">API</a>
+    </li>
+</ul>
+<hr>
+<div class="jumbotron">
+  <h1 class="display-4 d-flex justify-content-center">Welcome to the COVID visualizations</h1>
+  <p class="lead d-flex justify-content-center">Text goes here.</p>
+  <p class="d-flex justify-content-center"style="color:red;">Data last updated: 10/5/2020</p>
+</div>
 </body>
 
 </html>
