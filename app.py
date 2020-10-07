@@ -6,8 +6,8 @@ from sqlalchemy.orm import Session
 from state_abbrev import abbrev_us_state
 from flask import render_template
 
-rds_connection_string = 'covid_db_admin:pass123@localhost:5432/covid_db'
-#rds_connection_string = 'wewgmdkmixbost:2867215a1a0078b7b97755002ee58726a435d9667c75357935b55e35d15779b9@ec2-52-21-247-176.compute-1.amazonaws.com:5432/davqjt1jvosgp8'
+#rds_connection_string = 'covid_db_admin:pass123@localhost:5432/covid_db'
+rds_connection_string = 'vaetwnykonmsxk:8475b871d9028187109958cf2ba6d31067519d894622dcccf9d3c4401bb4059b@ec2-184-73-249-9.compute-1.amazonaws.com:5432/db9hptq0mroo2s'
 engine = create_engine(f'postgresql://{rds_connection_string}')
 
 Base = automap_base()
@@ -19,6 +19,8 @@ Masks = Base.classes.masks
 Cdc = Base.classes.cdc
 County = Base.classes.county
 Combined = Base.classes.combined
+Covidtrackingall = Base.classes.covidtracking_all
+Covidtrackingcurrent = Base.classes.covidtracking_current
 
 # Flask setup
 app = Flask(__name__)
@@ -53,7 +55,7 @@ def covid():
     # Create the session (link) from Python to the DB
     session = Session(engine)
 
-    #Return all covid stuff
+    #Return all covid fields
 
     results = session.query(Covid.date, Covid.county, Covid.state, Covid.fips, Covid.cases, Covid.deaths).all()
     session.close()
@@ -88,7 +90,7 @@ def covid_state(state_input):
         # Create the session (link) from Python to the DB
         session = Session(engine)
 
-        # Return all covid stuff
+        # Return all covid fields
 
         results = session.query(Covid.date, Covid.county, Covid.state, Covid.fips, Covid.cases, Covid.deaths).filter_by(state=state_search).all()
         
@@ -123,7 +125,7 @@ def masks():
     # Create the session (link) from Python to the DB
     session = Session(engine)
 
-    # Return all mask stuff
+    # Return all mask fields
     results = session.query(Masks.fips, Masks.never, Masks.rarely, Masks.sometimes, Masks.frequently, Masks.always).all()
     session.close()
 
@@ -153,14 +155,12 @@ def cdc():
     # Create the session (link) from Python to the DB
     session = Session(engine)
 
-    # Return all cdc stuff
+    # Return all cdc fields
 
     results = session.query(Cdc.state, Cdc.year, Cdc.week, Cdc.week_ending_date, Cdc.all_causes, Cdc.natural_causes, Cdc.septicemia,
     Cdc.malignant_neoplasms, Cdc.diabetes, Cdc.alzheimers, Cdc.influenza_and_pneumonia, Cdc.chronic_lower_respiratory, 
     Cdc.other_diseases_of_respiratory, Cdc.nephritis_nephrotic_syndrome, Cdc.symptoms_signs_and_abnormal,
-    Cdc.diseases_of_heart, Cdc.cerebrovascular_diseases, Cdc.covid_19_multiple_causes, Cdc.covid_19_underlying_cause, 
-    Cdc.flag_otherresp, Cdc.flag_otherunk, Cdc.flag_nephr, Cdc.flag_inflpn, Cdc.flag_cov19mcod, Cdc.flag_cov19ucod, Cdc.flag_sept,
-    Cdc.flag_diab, Cdc.flag_alz, Cdc.flag_clrd, Cdc.flag_stroke, Cdc.flag_hd, Cdc.flag_neopl, Cdc.flag_allcause, Cdc.flag_natcause).all()
+    Cdc.diseases_of_heart, Cdc.cerebrovascular_diseases, Cdc.covid_19_multiple_causes, Cdc.covid_19_underlying_cause).all()
      
     session.close()
 
@@ -204,7 +204,7 @@ def counties():
     # Create the session (link) from Python to the DB
     session = Session(engine)
 
-    # Return all county stuff
+    # Return all county fields
     results = session.query(County.state, County.fips, County.county, County.county_seat, County.lat, County.lon).all()
     print(results)
     session.close()
@@ -241,7 +241,7 @@ def counties_state(state_input):
         # Create the session (link) from Python to the DB
         session = Session(engine)
 
-        # Return all county stuff
+        # Return all county fields
         results = session.query(County.state, County.fips, County.county, County.county_seat, County.lat, 
         County.lon).filter_by(state=state_search).all()
         
@@ -268,6 +268,142 @@ def counties_state(state_input):
 
 #########
 # 
+# Create route to the covidtracking-all data table
+#
+#########
+@app.route("/api/v1.0/covidtracking-all")
+def covidtracking_all():
+    # Create the session (link) from Python to the DB
+    session = Session(engine)
+
+    # Return all covidtracking-all fields
+
+    results = session.query(Covidtrackingall.date, Covidtrackingall.states, Covidtrackingall.positive,
+    Covidtrackingall.negative, Covidtrackingall.pending, Covidtrackingall.hospitalized_currently,
+    Covidtrackingall.hospitalized_cumulative, Covidtrackingall.icu_currently, Covidtrackingall.icu_cumulative,
+    Covidtrackingall.ventilator_currently, Covidtrackingall.ventilator_cumulative, Covidtrackingall.recovered,
+    Covidtrackingall.deaths, Covidtrackingall.hospitalized, Covidtrackingall.total_test_results, Covidtrackingall.total,
+    Covidtrackingall.pos_neg, Covidtrackingall.death_increase, Covidtrackingall.hospitalized_increase,
+    Covidtrackingall.negative_increase, Covidtrackingall.positive_increase, Covidtrackingall.total_test_results_increase).all()
+
+    session.close()
+
+    all_covidtracking_all = []
+
+    for date, states, positive, negative, pending, hospitalized_currently, hospitalized_cumulative, icu_currently, icu_cumulative, ventilator_currently, ventilator_cumulative, recovered, deaths, hospitalized, total_test_results, total, pos_neg, death_increase, hospitalized_increase, negative_increase, positive_increase, total_test_results_increase in results:
+        covidtracking_all_dict = {}
+
+        covidtracking_all_dict["date"] = date
+        covidtracking_all_dict["states"] = states
+        covidtracking_all_dict["positive"] = positive
+        covidtracking_all_dict["negative"] = negative
+        covidtracking_all_dict["pending"] = pending
+        covidtracking_all_dict["hospitalized_currently"] = hospitalized_currently
+        covidtracking_all_dict["hospitalized_cumulative"] = hospitalized_cumulative
+        covidtracking_all_dict["icu_currently"] = icu_currently
+        covidtracking_all_dict["icu_cumulative"] = icu_cumulative
+        covidtracking_all_dict["ventilator_currently"] = ventilator_currently
+        covidtracking_all_dict["ventilator_cumulative"] = ventilator_cumulative
+        covidtracking_all_dict["recovered"] = recovered
+        covidtracking_all_dict["deaths"] = deaths
+        covidtracking_all_dict["hospitalized"] = hospitalized
+        covidtracking_all_dict["total_test_results"] = total_test_results
+        covidtracking_all_dict["total"] = total
+        covidtracking_all_dict["pos_neg"] = pos_neg
+        covidtracking_all_dict["death_increase"] = death_increase
+        covidtracking_all_dict["hospitalized_increase"] = hospitalized_increase
+        covidtracking_all_dict["negative_increase"] = negative_increase
+        covidtracking_all_dict["positive_increase"] = positive_increase
+        covidtracking_all_dict["total_test_results_increase"] = total_test_results_increase
+
+        all_covidtracking_all.append(covidtracking_all_dict)
+
+    return jsonify(all_covidtracking_all)
+
+#########
+# 
+# Create route to the covidtracking-all data table
+#
+#########
+@app.route("/api/v1.0/covidtracking-current")
+def covidtracking_current():
+    # Create the session (link) from Python to the DB
+    session = Session(engine)
+
+    # Return all covidtracking-current fields
+
+    results = session.query(Covidtrackingcurrent.date, Covidtrackingcurrent.state, Covidtrackingcurrent.positive,
+    Covidtrackingcurrent.probable_cases, Covidtrackingcurrent.negative, Covidtrackingcurrent.pending,
+    Covidtrackingcurrent.total_test_results, Covidtrackingcurrent.hospitalized_currently, Covidtrackingcurrent.hospitalized_cumulative,
+    Covidtrackingcurrent.icu_currently, Covidtrackingcurrent.icu_cumulative, Covidtrackingcurrent.ventilator_currently,
+    Covidtrackingcurrent.ventilator_cumulative, Covidtrackingcurrent.recovered, Covidtrackingcurrent.data_quality_grade, Covidtrackingcurrent.deaths,
+    Covidtrackingcurrent.hospitalized, Covidtrackingcurrent.total_tests_viral, Covidtrackingcurrent.positive_tests_viral,
+    Covidtrackingcurrent.negative_tests_viral, Covidtrackingcurrent.positive_cases_viral, Covidtrackingcurrent.deaths_confirmed,
+    Covidtrackingcurrent.deaths_probable, Covidtrackingcurrent.total_test_encounters_viral, Covidtrackingcurrent.total_tests_people_viral,
+    Covidtrackingcurrent.total_tests_antibody, Covidtrackingcurrent.positive_tests_antibody, Covidtrackingcurrent.negative_tests_antibody,
+    Covidtrackingcurrent.total_tests_people_antibody, Covidtrackingcurrent.positive_tests_people_antibody, Covidtrackingcurrent.negative_tests_people_antibody,
+    Covidtrackingcurrent.total_tests_people_antigen, Covidtrackingcurrent.positive_tests_people_antigen, Covidtrackingcurrent.total_tests_antigen,
+    Covidtrackingcurrent.positive_tests_antigen, Covidtrackingcurrent.positive_increase, Covidtrackingcurrent.negative_increase, Covidtrackingcurrent.total,
+    Covidtrackingcurrent.total_test_results_source, Covidtrackingcurrent.total_test_results_increase, Covidtrackingcurrent.pos_neg,
+    Covidtrackingcurrent.death_increase, Covidtrackingcurrent.hospitalized_increase).all()
+    session.close()
+    
+    all_covidtracking_current = []
+
+    for date, state, positive, probable_cases, negative, pending, total_test_results, hospitalized_currently, hospitalized_cumulative, icu_currently, icu_cumulative, ventilator_currently, ventilator_cumulative, recovered, data_quality_grade, deaths, hospitalized, total_tests_viral, positive_tests_viral, negative_tests_viral, positive_cases_viral, deaths_confirmed, deaths_probable, total_test_encounters_viral, total_tests_people_viral, total_tests_antibody, positive_tests_antibody, negative_tests_antibody, total_tests_people_antibody, positive_tests_people_antibody, negative_tests_people_antibody, total_tests_people_antigen, positive_tests_people_antigen, total_tests_antigen, positive_tests_antigen, positive_increase, negative_increase, total, total_test_results_source, total_test_results_increase, pos_neg, death_increase, hospitalized_increase in results:
+        
+        covidtracking_current_dict = {}
+
+        covidtracking_current_dict["date"] = date
+        covidtracking_current_dict["state"] = state
+        covidtracking_current_dict["positive"] = positive
+        covidtracking_current_dict["probable_cases"] = probable_cases
+        covidtracking_current_dict["negative"] = negative
+        covidtracking_current_dict["pending"] = pending
+        covidtracking_current_dict["total_test_results"] = total_test_results
+        covidtracking_current_dict["hospitalized_currently"] = hospitalized_currently
+        covidtracking_current_dict["hospitalized_cumulative"] = hospitalized_cumulative
+        covidtracking_current_dict["icu_currently"] = icu_currently
+        covidtracking_current_dict["icu_cumulative"] = icu_cumulative
+        covidtracking_current_dict["ventilator_currently"] = ventilator_currently
+        covidtracking_current_dict["ventilator_cumulative"] = ventilator_cumulative
+        covidtracking_current_dict["recovered"] = recovered
+        covidtracking_current_dict["data_quality_grade"] = data_quality_grade
+        covidtracking_current_dict["deaths"] = deaths
+        covidtracking_current_dict["hospitalized"] = hospitalized
+        covidtracking_current_dict["total_tests_viral"] = total_tests_viral
+        covidtracking_current_dict["positive_tests_viral"] = positive_tests_viral
+        covidtracking_current_dict["negative_tests_viral"] = negative_tests_viral
+        covidtracking_current_dict["positive_cases_viral"] = positive_cases_viral
+        covidtracking_current_dict["deaths_confirmed"] = deaths_confirmed
+        covidtracking_current_dict["deaths_probable"] = deaths_probable
+        covidtracking_current_dict["total_test_encounters_viral"] = total_test_encounters_viral
+        covidtracking_current_dict["total_tests_people_viral"] = total_tests_people_viral
+        covidtracking_current_dict["total_tests_antibody"] = total_tests_antibody
+        covidtracking_current_dict["positive_tests_antibody"] = positive_tests_antibody
+        covidtracking_current_dict["negative_tests_antibody"] = negative_tests_antibody
+        covidtracking_current_dict["total_tests_people_antibody"] = total_tests_people_antibody
+        covidtracking_current_dict["positive_tests_people_antibody"] = positive_tests_people_antibody
+        covidtracking_current_dict["negative_tests_people_antibody"] = negative_tests_people_antibody
+        covidtracking_current_dict["total_tests_people_antigen"] = total_tests_people_antigen
+        covidtracking_current_dict["positive_tests_people_antigen"] = positive_tests_people_antigen
+        covidtracking_current_dict["total_tests_antigen"] = total_tests_antigen
+        covidtracking_current_dict["positive_tests_antigen"] = positive_tests_antigen
+        covidtracking_current_dict["positive_increase"] = positive_increase
+        covidtracking_current_dict["negative_increase"] = negative_increase
+        covidtracking_current_dict["total"] = total
+        covidtracking_current_dict["total_test_results_source"] = total_test_results_source
+        covidtracking_current_dict["total_test_results_increase"] = total_test_results_increase
+        covidtracking_current_dict["pos_neg"] = pos_neg
+        covidtracking_current_dict["death_increase"] = death_increase
+        covidtracking_current_dict["hospitalized_increase"] = hospitalized_increase
+
+        all_covidtracking_current.append(covidtracking_current_dict)
+
+    return jsonify(all_covidtracking_current)
+
+#########
+# 
 # Create route to the combined data table
 #
 #########
@@ -277,7 +413,7 @@ def combined():
     # Create the session (link) from Python to the DB
     session = Session(engine)
 
-    # Return all county stuff
+    # Return all county fields
     results = session.query(Combined.date, Combined.county, Combined.state, Combined.cases, Combined.deaths, 
     Combined.fips, Combined.never, Combined.rarely, Combined.sometimes, Combined.frequently, Combined.always, 
     Combined.county_seat, Combined.lat, Combined.lon).all()
@@ -324,7 +460,7 @@ def combined_state(state_input):
         # Create the session (link) from Python to the DB
         session = Session(engine)
 
-        # Return all county stuff
+        # Return all county fields
         results = session.query(Combined.date, Combined.county, Combined.state, Combined.cases, Combined.deaths, 
         Combined.fips, Combined.never, Combined.rarely, Combined.sometimes, Combined.frequently, Combined.always, 
         Combined.county_seat, Combined.lat, Combined.lon).filter_by(state=state_search).all()
@@ -356,17 +492,15 @@ def combined_state(state_input):
         return jsonify(all_data)
     
     except:
-        return bad_request("State not found. Please format the state its two-letter abbreviation.")
+        return bad_request("State not found. Please format the state as its two-letter abbreviation.")
 
 
-# Error messages
+# Error message
 def bad_request(message):
     response = jsonify({'Error': message})
     response.status_code = 400
     return response
 
-# Comment
+# Run the app
 if __name__ == '__main__':
     app.run(debug=True)
-
- 
