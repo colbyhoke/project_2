@@ -1,44 +1,18 @@
-<!Doctype html>
-<html lang='en'>
-  <head>
-    <meta charset='utf-8' />
-    <title>Covid-19: US Cause of Death Effect</title>
-    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
-    <link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-  </head>
-  <body>
-    <div id='map'></div>
-    <div id='console'>
-      <h1>What Effect Has Covid-19 Had on the 'Cause of Death' in the US?</h1>
-      <p>Data: <a href='https://github.com/nytimes/covid-19-data'>Covid-19 NYTimes Repository</a></p>
-      <div class='session'>
-        <h2>As the color changes, the number increases</h2>
-        <div class='row colors'></div>
-        <div class='row labels'>
-          <div class='label'>0</div>
-          <div class='label'>1,000</div>
-          <div class='label'>50k</div>
-          <div class='label'>100k</div>
-          <div class='label'>150k</div>
-          <div class='label'>200k+</div>
-        </div>
-      </div>
-      <div class='session' id='sliderbar'>
-        <h2>DATE: <label id='active-date'>2020-01-01</label></h2>
-        <input id='slider' class='row' type='range' min='0' max='10' step='1' value='12' />
-      </div>
-      <div class='session'>
-        <h2>Filter Between Total Covid Deaths and Cases within the US</h2>
-        <div class='row' id='filters'>
-          <input id='Deaths' type='radio' name='toggle' value='Deaths' checked='checked'>
-          <label for='Deaths'>Total Deaths</label>
-          <input id='Cases' type='radio' name='toggle' value='Cases'>
-          <label for='Cases'>Total Cases</label>
-        </div>
-      </div>
-    </div>
-    <script type="text/javascript" src="static/logic.js"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>People Who Always Wear a Mask by US County</title>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v1.7.0/mapbox-gl.css" rel="stylesheet" />
+  <script src="https://d3js.org/d3-dsv.v1.min.js"></script>
+  <script src="https://d3js.org/d3-fetch.v1.min.js"></script>
+  <script src="https://d3js.org/d3-format.v1.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+  <div id="map"></div>
+</body>
+<script type="text/javascript" src="static/logic.js"></script>
 </html>
