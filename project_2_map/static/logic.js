@@ -5,7 +5,7 @@ const map = new mapboxgl.Map({
   style: 'mapbox://styles/cjreside/ckfo8p10m1hh319ogptxg584j', // Developed style that utilizes the ALBERS geographic projections.
   maxZoom: 18,
   zoom: 3.8,
-  center: [-3.632, 0.339]
+  center: [-1, 0.339]
 });
 
 // Will only populate "data" when the cursor is over an object with data, outside of the mape is "intentionally absent".
@@ -102,9 +102,8 @@ map.on('load', () => {
       map.on('mousemove', 'albersusa-fill', (e) => {
         map.getCanvas().style.cursor = 'pointer';
         const description = 
-        `<p>${d3.format("")((e.features[0].state.mask_always)*100)}% of the people in ${e.features[0].properties.county_name}
+        `<p>${d3.format("")(e.features[0].state.mask_always*100)}% of the people in ${e.features[0].properties.county_name}
         always wears a mask</p>`;
-	      
         popup // Determines where, what, and how the pop up reacts
           .setLngLat(e.lngLat)
           .setHTML(description)
@@ -152,4 +151,4 @@ map.on('load', () => {
       map.on('sourcedata', setAfterLoad);
     }
   }
-})
+});
