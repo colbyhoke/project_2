@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="stylesheet" type="text/css" href="/static/css/style.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="icon" 
-      type="image/png" 
-      href="/static/favicon.ico">
+  <link rel="icon" 
+    type="image/png" 
+    href="/static/favicon.ico">
 </head>
 <body>
   <ul class="nav justify-content-center">
     <li class="nav-item">
-      <a class="nav-link active" href="#">Visualizations</a>
+      <a class="nav-link active">Mask map</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="/counties.html">County graph</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="/api/v1.0/">API</a>
@@ -17,24 +21,32 @@
   </ul>
 <hr>
 <div class="jumbotron">
-  <h1 class="display-4 d-flex justify-content-center">Welcome to the COVID visualizations</h1>
+  <h1 class="display-4 d-flex justify-content-center">Welcome to the COVID visualizations dashboard</h1>
   <p class="d-flex justify-content-center"style="color:red;">Data last updated: 10/5/2020</p>
 </div>
 <div class="container">
   <div class="row">
-    <div class="col-md-10">
-      <h2>Map stuff!</h2>
+    <div class="col-md">
       <iframe src='/map.html'
               width='100%' height='550px'>
       </iframe>
+    </div>
   </div>
-  <div class="col-md-2">
+  <hr>
+  <div class="row">
+    <div class="col-md">
+      <h2 class="d-flex justify-content-center">Cases and Deaths by County</h2>
+      <iframe src='/chart.html'
+              width='100%' height='650px'>
+      </iframe>
+    </div>
   </div>
 </div>
-<div class="row">
-</div>
-
-</div>
+<footer id="sticky-footer" class="py-4 bg-dark ">
+  <div class="container text-center ">
+    <small>2020</small>
+  </div>
+</footer>
 </body>
 
 </html>
