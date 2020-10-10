@@ -6,7 +6,6 @@ from state_abbrev import abbrev_us_state
 from flask import render_template
 from config import db_login_info
 
-
 engine = create_engine(f'{db_login_info}')
 
 Base = automap_base()
@@ -23,10 +22,6 @@ Covidtrackingcurrent = Base.classes.covidtracking_current
 # Flask setup
 app = Flask(__name__)
 
-@app.route('/new')
-def newviz():
-    return render_template("newviz.html")
-
 #########
 # 
 # Create home route
@@ -38,12 +33,12 @@ def index():
 
 #########
 # 
-# Create map route
+# Create counties route
 #
 #########
-@app.route('/map.html')
-def map():
-    return render_template("map.html")
+@app.route('/counties.html')
+def county_index():
+    return render_template("counties.html")
 
 #########
 # 
@@ -53,6 +48,28 @@ def map():
 @app.route('/api/v1.0/')
 def api():
     return render_template("api_routes.html")
+
+#########
+# 
+# Create map route
+# Note: This page is loaded in index.html via an iframe
+#
+#########
+@app.route('/map.html')
+def map():
+    return render_template("map.html")
+
+#########
+# 
+# Create chart route
+# Note: This page is loaded in counties.html via an iframe
+#
+#########
+@app.route('/chart.html')
+def chart():
+    return render_template("chart.html")
+
+
 
 #########
 # 
@@ -158,7 +175,6 @@ def masks():
 # Create route to all of the cdc data
 #
 #########
-
 @app.route("/api/v1.0/cdc")
 def cdc():
     # Create the session (link) from Python to the DB
@@ -216,7 +232,7 @@ def counties():
     # Return all county fields
     results = session.query(County.state, County.fips, County.county, County.county_seat, County.lat, County.lon).all()
     print(results)
-    #session.close()
+    session.close()
 
     all_counties = []
 
@@ -239,7 +255,6 @@ def counties():
 # Create route to all of the county data, but filtered by state input by the user
 #
 #########
-
 @app.route("/api/v1.0/counties/<state_input>")
 def counties_state(state_input):
     
@@ -558,99 +573,6 @@ def covidtracking_current_state(state_input):
     
     except:
         return bad_request("State not found. Please format the state its two-letter abbreviation.")
-
-#########
-# 
-# Create route to the combined data table
-#
-#########
-
-@app.route("/api/v1.0/combined-data")
-def combined():
-    # Create the session (link) from Python to the DB
-    session = Session(engine)
-
-    # Return all county fields
-    results = session.query(Combined.date, Combined.county, Combined.state, Combined.cases, Combined.deaths, 
-    Combined.fips, Combined.never, Combined.rarely, Combined.sometimes, Combined.frequently, Combined.always, 
-    Combined.county_seat, Combined.lat, Combined.lon).all()
-
-    session.close()
-
-    all_data = []
-
-    for date, county, state, cases, deaths, fips, never, rarely, sometimes, frequently, always, county_seat, lat, lon in results:
-        combined_dict = {}
-
-        combined_dict["date"] = date
-        combined_dict["county"] = county 
-        combined_dict["state"] = state
-        combined_dict["cases"] = cases
-        combined_dict["deaths"] = deaths
-        combined_dict["fips"] = fips
-        combined_dict["mask_never"] = never
-        combined_dict["mask_rarely"] = rarely
-        combined_dict["mask_sometimes"] = sometimes
-        combined_dict["mask_frequently"] = frequently
-        combined_dict["mask_always"] = always
-        combined_dict["county_seat"] = county_seat
-        combined_dict["lat"] = lat
-        combined_dict["lon"] = lon
-
-        all_data.append(combined_dict)
-
-    return jsonify(all_data)
-
-#########
-# 
-# Create route to the combined data table, but filtered by state input by the user
-#
-#########
-
-@app.route("/api/v1.0/combined-data/<state_input>")
-def combined_state(state_input):
-    try:
-        # Handle different inputs and capitalizations  
-        state_input = state_input.upper()
-        state_search = abbrev_us_state[state_input]
-        
-        # Create the session (link) from Python to the DB
-        session = Session(engine)
-
-        # Return all county fields
-        results = session.query(Combined.date, Combined.county, Combined.state, Combined.cases, Combined.deaths, 
-        Combined.fips, Combined.never, Combined.rarely, Combined.sometimes, Combined.frequently, Combined.always, 
-        Combined.county_seat, Combined.lat, Combined.lon).filter_by(state=state_search).all()
-
-        session.close()
-
-        all_data = []
-
-        for date, county, state, cases, deaths, fips, never, rarely, sometimes, frequently, always, county_seat, lat, lon in results:
-            combined_dict = {}
-
-            combined_dict["date"] = date
-            combined_dict["county"] = county 
-            combined_dict["state"] = state
-            combined_dict["cases"] = cases
-            combined_dict["deaths"] = deaths
-            combined_dict["fips"] = fips
-            combined_dict["mask_never"] = never
-            combined_dict["mask_rarely"] = rarely
-            combined_dict["mask_sometimes"] = sometimes
-            combined_dict["mask_frequently"] = frequently
-            combined_dict["mask_always"] = always
-            combined_dict["county_seat"] = county_seat
-            combined_dict["lat"] = lat
-            combined_dict["lon"] = lon
-
-            all_data.append(combined_dict)
-
-        return jsonify(all_data)
-    
-    except:
-        return bad_request("State not found. Please format the state as its two-letter abbreviation.")
-
 
 # Error message
 def bad_request(message):
