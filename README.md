@@ -1,5 +1,12 @@
 # project_2
 
+## Files overview
+* Everything in /heroku is what we have in production on: https://secure-river-49709.herokuapp.com
+* The files in /setup are what you would use to ETL the data. That includes a Jupyter Notebook and a .sql file used to query and set up the Postgres database.
+* /static holds the CSS, Javascript, and favicon files
+* /templates holds all of the html files that get served by app.py in the home folder
+* app.py is the Flask application to run the dashboard locally
+* state_abbrev.py is an adapted GitHub project to look up / match state names with abbreviations. This helps the API routing translate input to match with database entries.
 
 ## Our project proposal:
 ### Overview:
