@@ -207,7 +207,7 @@ def counties():
     # Return all county fields
     results = session.query(County.state, County.fips, County.county, County.county_seat, County.lat, County.lon).all()
     print(results)
-    session.close()
+    #session.close()
 
     all_counties = []
 
