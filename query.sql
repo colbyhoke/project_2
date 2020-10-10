@@ -12,7 +12,7 @@ CREATE TABLE covid (
 );
 
 CREATE TABLE masks (
-    fips INT PRIMARY KEY,
+    fips TEXT PRIMARY KEY,
     never FLOAT,
     rarely FLOAT,
     sometimes FLOAT,
