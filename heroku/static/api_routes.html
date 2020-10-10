@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+    <link rel="icon" 
+      type="image/png" 
+      href="./favicon.ico">
+    <title>Welcome to the COVID API documentation</title>
+</head>
+<body>
+    <ul class="nav justify-content-center">
+        <li class="nav-item">
+          <a class="nav-link" href="../../index.html">Mask map</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="../../counties.html">County graph</a>
+          </li>
+        <li class="nav-item">
+          <a class="nav-link active">API</a>
+        </li>
+      </ul>
+    <hr>
+    <div class="jumbotron">
+        <h1 class="display-4 d-flex justify-content-center">Welcome to the COVID API documentation</h1>
+        <p class="lead d-flex justify-content-center">Below, you'll find links and examples for how to use our API. The results are returned as JSONified data.</p>
+        <p class="d-flex justify-content-center"style="color:red;">Data last updated: 10/5/2020</p>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md">
+                <h2><a name="cases">Cases and deaths</a></h2>
+                <p>COVID-19 cases and deaths county data gathered from the <a href="https://github.com/nytimes/covid-19-data">New York Times COVID-19 project on GitHub</a>.</p>
+                <a href='/api/v1.0/covid-all'><button>Covid API</a></button>
+                <br><br>
+            </div>
+            <div class="col-md">
+                <p><strong>Data structure example</strong></p>
+                <p>
+                    "cases": 1,<br>
+                    "county": "Wake",<br>
+                    "date": "2020-03-03",<br>
+                    "deaths": 0,<br>
+                    "fips": 37183,<br>
+                    "state": "North Carolina"<br>
+                </p>
+            </div>
+            <div class="col-md">
+                <p><strong>Filter by: state</strong></p>
+                <p>Append the two-letter state abbreviation after the slash.</p>
+                <p>For example, for North Carolina, use: <a href='./covid-all/nc'>covid-all/nc</a></p>
+            </div>
+        </div>
+        
+        <hr>  
+        
+        <div class="row">
+            <div class="col-md">
+                <h2><a name="mask">Mask use</a></h2>
+                <p>Mask use data gathered from the <a href="https://github.com/nytimes/covid-19-data/tree/master/mask-use">New York Times COVID-19 project on GitHub</a>.</p>
+                <a href='/api/v1.0/masks'><button>Masks API</a></button>
+                <br><br>
+            </div>
+            <div class="col-md">
+                <p><strong>Data structure example</strong></p>
+                <p>
+                    "fips": 1001,<br>
+                    "mask_always": 0.444,<br>
+                    "mask_frequently": 0.295,<br>
+                    "mask_never": 0.053,<br>
+                    "mask_rarely": 0.07400000000000001,<br>
+                    "mask_sometimes": 0.134<br>
+                </p>
+            </div>
+            <div class="col-md">
+                <p><strong>Filter by:</strong></p>
+                <p>None at this time</p>
+            </div>
+        </div>
+
+        <hr>              
+        
+        <div class="row">
+            <div class="col-md">
+                <h2><a name="covid-all">Covid tracking project:<br>All data</a></h2>
+                <p>Data from the <a href="https://covidtracking.com">Covid Tracking Project</a> (all-time).</p>
+                <a href='/api/v1.0/covidtracking-all'><button>Covid all API</a></button>
+                <br><br>
+                <br><br>
+                
+            </div>
+            <div class="col-md">
+                <p><strong>Data structure example</strong></p>
+                <p>
+                    "date": 20201006,<br>
+                    "death_increase": 634,<br>
+                    "deaths": 202675,<br>
+                    "hospitalized": 414461,<br>
+                    "hospitalized_cumulative": 414461,<br>
+                    "hospitalized_currently": 31346,<br>
+                    "hospitalized_increase": -624,<br>
+                    "icu_cumulative": 20973,<br>
+                    "icu_currently": 6438,<br>
+                    "negative": 97932855,<br>
+                    "negative_increase": 722475,<br>
+                    "pending": 8680,<br>
+                    "pos_neg": 0,<br>
+                    "positive": 7460634,<br>
+                    "positive_increase": 38661,<br>
+                    "recovered": 2952390,<br>
+                    "states": "56",<br>
+                    "total": 0,<br>
+                    "total_test_results": 110226302,<br>
+                    "total_test_results_increase": 823419,<br>
+                    "ventilator_cumulative": 2388,<br>
+                    "ventilator_currently": 1609<br>
+                </p>
+            </div>
+            <div class="col-md">
+                <p><strong>Filter by: date</strong></p>
+                <p>Append the 8-digit date after the slash, following the format YYYYMMDD.</p>
+                <p>For example, for October 6, 2020, use: <a href='./covidtracking-all/20201006'>covidtracking-all/20201006</a></p>
+            </div>
+        </div>
+        
+        <hr> 
+
+        <div class="row">
+            <div class="col-md">
+                <h2><a name="covid-current">Covid tracking project:<br>Current data</a></h2>
+                <p>Data from the <a href="https://covidtracking.com">Covid Tracking Project</a> (current).</p>
+                <a href='./covidtracking-current'><button>Covid current API</a></button>
+                <br><br>
+            </div>
+            <div class="col-md">
+                <p><strong>Data structure example</strong></p>
+                <p>
+                    "data_quality_grade": "A",<br>
+                    "date": 20201006,<br>
+                    "death_increase": 0,<br>
+                    "deaths": 58,<br>
+                    "deaths_confirmed": 58,<br>
+                    "deaths_probable": 0,<br>
+                    "hospitalized": 0,<br>
+                    "hospitalized_cumulative": 0,<br>
+                    "hospitalized_currently": 45,<br>
+                    "hospitalized_increase": 0,<br>
+                    "icu_cumulative": 0,<br>
+                    "icu_currently": 0,<br>
+                    "negative": 469787,<br>
+                    "negative_increase": 0,<br>
+                    "negative_tests_antibody": 0,<br>
+                    "negative_tests_people_antibody": 0,<br>
+                    "negative_tests_viral": 470291,<br>
+                    "pending": 0,<br>
+                    "pos_neg": 479374,<br>
+                    "positive": 9587,<br>
+                    "positive_cases_viral": 9587,<br>
+                    "positive_increase": 0,<br>
+                    "positive_tests_antibody": 0,<br>
+                    "positive_tests_antigen": 0,<br>
+                    "positive_tests_people_antibody": 0,<br>
+                    "positive_tests_people_antigen": 0,<br>
+                    "positive_tests_viral": 8790,<br>
+                    "probable_cases": 0,<br>
+                    "recovered": 5455,<br>
+                    "state": "AK",<br>
+                    "total": 479374,<br>
+                    "total_test_encounters_viral": 0,<br>
+                    "total_test_results": 479374,<br>
+                    "total_test_results_increase": 0,<br>
+                    "total_test_results_source": "posNeg",<br>
+                    "total_tests_antibody": 0,<br>
+                    "total_tests_antigen": 0,<br>
+                    "total_tests_people_antibody": 0,<br>
+                    "total_tests_people_antigen": 0,<br>
+                    "total_tests_people_viral": 0,<br>
+                    "total_tests_viral": 479374,<br>
+                    "ventilator_cumulative": 0,<br>
+                    "ventilator_currently": 6<br>
+                </p>
+            </div>
+            <div class="col-md">
+                <p><strong>Filter by: state</strong></p>
+                <p>Append the two-letter state abbreviation after the slash.</p>
+                <p>For example, for North Carolina, use: <a href='./covidtracking-current/nc'>covidtracking-current/nc</a></p>  
+            </div>
+        </div>
+        
+        <hr> 
+
+        <div class="row">
+            <div class="col-md">
+                <h2><a name="cdc">CDC data</a></h2>
+                <p>Excess Deaths Associated with COVID-19 from <a href="https://www.cdc.gov/nchs/nvss/vsrr/covid19/excess_deaths.htm">Centers for Disease Control and Prevention</a>.</p>
+                <a href='/api/v1.0/cdc'><button>CDC API</a></button>
+                <br><br>
+            </div>
+            <div class="col-md">
+                <p><strong>Data structure example</strong></p>
+                <p>
+                    "all_causes": 1077,<br>
+                    "alzheimers": 60,<br>
+                    "cerebrovascular_diseases": 53,<br>
+                    "chronic_lower_respiratory": 63,<br>
+                    "covid_19_multiple_causes": 0,<br>
+                    "covid_19_underlying_cause": 0,<br>
+                    "diabetes": 22,<br>
+                    "diseases_of_heart": 261,<br>
+                    "influenza_and_pneumonia": 21,<br>
+                    "malignant_neoplasms": 198,<br>
+                    "natural_causes": 993,<br>
+                    "nephritis_nephrotic_syndrome": 21,<br>
+                    "other_diseases_of_respiratory": 14,<br>
+                    "septicemia": 30,<br>
+                    "state": "Alabama",<br>
+                    "symptoms_signs_and_abnormal": 27,<br>
+                    "week": 1,<br>
+                    "week_ending_date": "1/5/2019",<br>
+                    "year": 2019<br>
+                </p>
+            </div>
+            <div class="col-md">
+                <p><strong>Filter by: </strong></p>
+                <p>None at this time.</p>
+            </div>
+        </div>
+        
+        <hr>
+        
+        <div class="row">
+            <div class="col-md">
+                <h2><a name="county">County data</a></h2>
+                <p>County <a href="https://en.wikipedia.org/wiki/User:Michael_J/County_table">geographic data</a> used to plot and display stats on maps.</p>
+                <a href='./counties'><button>Counties API</a></button>
+                <br><br>
+            </div>
+            <div class="col-md">
+                <p><strong>Data structure example</strong></p>
+                <p>
+                    "county": "Autauga",<br>
+                    "county_seat": "Prattville",<br>
+                    "fips": 1001,<br>
+                    "lat": 32.536382,<br>
+                    "lon": -86.64449,<br>
+                    "state": "AL"<br>
+                </p>
+            </div>
+            <div class="col-md">
+                <p><strong>Filter by: state</strong></p>
+                <p>Append the two-letter state abbreviation after the slash.</p>
+                <p>For example, for North Carolina, use: <a href='./counties/nc'>covidtracking-current/nc</a></p>
+            </div>
+        </div>
+
+    </div>
+    <br><br><br>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

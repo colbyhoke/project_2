@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  
+  <script src="https://d3js.org/d3.v5.js"></script>
+  <script type="text/javascript" src="./js/select_state_county.js"></script>
+</head>
+<body onload="javascript:show_initial()">
+  
+  <p id="msg"></p>
+  <select id="sel_state" onchange="show_county(this)">
+    <option value="">-- Select state --</option>
+  </select>
+  <select id="sel_county" onchange="selections_made(this)">
+    <option value="">-- Select county--</option>
+  </select>
+  <div id="chart"></div>
+</body>
+
+</html>
